@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Sofia' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Abel' rel='stylesheet'>
+    <style media="screen">
+      body, html {
+        background-color: black;
+        height: 100%;
+        overflow: hidden;
+        margin: 0;
+        background-image: url('../static/bg3.jpg');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      .logout_bar {
+        padding: 5px;
+        font-size: 20px;
+        font-family: Abel;
+        text-align: center;
+        background-color: #000000aa;
+        color: #ccc;
+        width: auto;
+        backdrop-filter: blur(8px);
+      }
+      .btn_options {
+        font-size: 22px;
+        font-family: Abel;
+        padding: 16px 24px;
+        width: 100%;
+        background-color: Transparent;
+        background-repeat:no-repeat;
+        overflow: hidden;
+        outline:none;
+
+        color: #ccc;
+        border: none;
+        cursor: pointer;
+        transition: 0.5s;
+      }
+      .btn_options:hover {
+        background-color: #ccc;
+        color: #000;
+      }
+
+      .btn_options_down {
+        font-size: 22px;
+        font-family: Abel;
+        padding: 16px 24px;
+        width: 100%;
+        background-color: Transparent;
+        background-repeat:no-repeat;
+        overflow: hidden;
+        outline:none;
+
+        color: #f00;
+        border: none;
+        cursor: pointer;
+        transition: 0.5s;
+
+        position: absolute;
+        bottom: 10%;
+        left: 0;
+      }
+      .btn_options_down:hover {
+        background-color: #c33;
+        color: #ccc;
+      }
+      .column {
+        text-align: center;
+        background-color: #000000aa;
+        color: #ccc;
+        width: 20%;
+        padding: 40px 40px;
+        height: 100%;
+        backdrop-filter: blur(8px);
+      }
+      .content_column {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        text-align: center;
+        color: #ccc;
+        width: 100%;
+        padding: 16px 40px;
+        height: 100%;
+        backdrop-filter: blur(8px);
+      }
+      .forms {
+        font-family: Abel;
+        font-size: 24px;
+        color: #000;
+        position: absolute;
+        top: 10%;
+        left: 50%;
+        transform: translate(-50%, 0%);
+      }
+      .table_center {
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .table_row_padding {
+        padding-bottom: 1em;
+        border: 2px solid Transparent;
+      }
+      .utb, td {
+        border: 2px solid black;
+        width: auto;
+        border-collapse: collapse;
+        padding: 2px 2px;
+      }
+      button {
+        width: 100%;
+        padding: 12px 4px;
+      }
+      .btn_gc {
+        width: 15%;
+        padding: 6px;
+      }
+      input {
+        width: 100%;
+        padding: 12px 8px;
+      }
+      div.scroll {
+        width: auto;
+        height: 85%;
+        padding: 1px 5px;
+        overflow: auto;
+        border: 2px solid #208020;
+        background-color: #ffffff20;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <!-- ---------------------------------------- content_column ---------------------------------------- -->
+    <div class="content_column">
+      <!-- ------------- global_criterion ------------- -->
+      <div class="forms" id="global_criterion">
+        <form action="/gc">
+          <button class="btn_gc" name="submit">Submit</button>
+        </form>
+        <button class="btn_gc" onclick="reset()">reset</button>
+        <button class="btn_gc" onclick="print_screen()">print</button>
+        <hr>
+        <table class="utb" id="table_Constraint">
+          <tr>
+            <td>Constraint name</td>
+            <td>Coefficient</td>
+            <td><button class="table_button" onclick="add_to_constraint()">add new constraint</button></td>
+          </tr>
+          <tr>
+            <td><input placeholder="Constraint name"></td>
+            <td><input placeholder="Coefficient"></td>
+            <td><button>Delete</button></td>
+          </tr>
+        </table>
+        
+        <br>
+
+        <table class="utb" id="table_Objective">
+          <tr>
+            <td>Objective name</td>
+            <td>Coefficient</td>
+            <td><button class="table_button" onclick="add_to_objective()">add new objective</button></td>
+          </tr>
+          <tr>
+            <td><input placeholder="Objective name"></td>
+            <td><input placeholder="Coefficient"></td>
+            <td><button>Delete</button></td>
+          </tr>
+        </table>
+
+      </div>
+
+      <!-- ------------- electre3 ------------- -->
+      <div class="forms" id = "electre3" style="width:55%;font-size:18px;background-color:#ffffff80;">
+        <hr>
+        <form action="/electre3" method="POST">
+        <!-- <textarea id="electre3_text" name="electre3_text"></textarea> -->
+          Param Q: <input type="text" name="pq" style="width:120px;">
+          Param P: <input type="text" name="pp" style="width:120px;">
+          Param V: <input type="text" name="pv" style="width:120px;">
+          Param W: <input type="text" name="pw" style="width:120px;">
+          <br>
+          <p>Alt 1: <input type="text" name="a1" style="width:40%;"> Alt 2: <input type="text" name="a2" style="width:40%;"></p>
+          <p>Alt 3: <input type="text" name="a3" style="width:40%;"> Alt 4: <input type="text" name="a4" style="width:40%;"></p>
+          <p>Alt 5: <input type="text" name="a5" style="width:40%;"> Alt 6: <input type="text" name="a6" style="width:40%;"></p>
+          <hr>
+          <input type="submit" value="calculate" style="padding:15px 15px;width:20%;">
+        </form>
+        <button onclick="print()" style="width:20%;">print</button>
+        <hr>
+        {% for i in results %}
+        <p align="left" style="background-color:#ffffff80;width:50%;">{{ i }}</p>
+        {% endfor %}
+      </div>
+
+      <!-- ------------- topsis ------------- -->
+      <div class="forms" id="topsis" style="width:80%;font-size:18px;">
+        <form action="/tops" method="POST">
+          <div class="forms" id="global_criterion">
+            <!-- <input type="submit" name="calculate" value="calculate" id="calculate"> -->
+            <input type="submit" value="calculate" style="padding:15px 15px;width:30%;">
+            <hr>
+            <table class="utb" id="table_tops">
+              <tr>
+                <td>weight</td>
+                <td>criterion type</td>
+                <td>alternative</td>
+                <td style="width:20%;"><button type="button" class="table_button" onclick="add_to_alt()">add new alt</button></td>
+              </tr>
+              <tr>
+                <td><input type="text" name="tw0" placeholder="weight"></td>
+                <td><input type="text" name="tc0" placeholder="min/max"></td>
+                <td><input type="text" name="ta0" placeholder="alt array"></td>
+                <td><button type="button" disabled="disabled">Delete</button></td>
+              </tr>
+            </table>
+            <hr>
+            <input type="text" id="i_tops" name="i_tops" value="0">
+            {% for i in topsis_results %}
+            <p align="left" style="background-color:#ffffff80;width:auto;">{{ i }}</p>
+            {% endfor %}
+          </div>
+        </form>
+      </div>
+
+      <!-- ------------- fuzzy topsis ------------- -->
+      <form action="/ftops" id = "fuzzy_topsis">
+        <div class="forms">
+          <h1>fuzzy topsis placeholder</h1>
+        </div>
+      </form>
+
+      <!-- ------------- chat ------------- -->
+      <form action="/dashboard-chat" id="commune">
+        <div style="position:absolute;bottom:0px; right:0px;font-size:20px;font-family:Abel;padding:15px 15px;
+        background-color:#000000aa;color: #ccc;width:25%;backdrop-filter:blur(8px);height:400px;">
+
+          <div class="scroll">
+            {% for i in all_messages %}
+            <p align="left">{{ i }}</p>
+            {% endfor %}
+          </div>
+          <div style="position:absolute;bottom:0px;left:0px;padding:10px 10px;">
+            <input type="text" name="chatname" placeholder="name" required style="width:15%;"> :
+            <input type="text" name="message" placeholder="message" required style="width:40%;">
+            <input type="submit" value="send" style="width:15%;">
+            <a href="/refresh">
+              <input type="button" value="refresh" style="width:20%;">
+            </a>
+          </div>
+        </div>
+      </form>
+      
+      
+    </div>
+
+    <!-- ---------------------------------------- navbar top ---------------------------------------- -->
+    <div class="logout_bar">
+      {{ name }}
+    </div>
+
+    <!-- ---------------------------------------- first column ---------------------------------------- -->
+    <div class="column">
+      <table calss="table_center">
+        <tr>
+          <td class="table_row_padding">
+            <button type="submit" onclick="GC()" class="btn_options"><u>GLOBAL CRITERION</u></button>
+          </td>
+        </tr>
+        <tr>
+          <td class="table_row_padding">
+            <button type="submit" onclick="electre3()" class="btn_options"><u>ELECTRE III</u></button>
+          </td>
+        </tr>
+        <tr>
+          <td class="table_row_padding">
+            <button type="submit" onclick="tops()" class="btn_options"><u>TOPSIS</u></button>
+          </td>
+        </tr>
+        <!-- <tr>
+          <td class="table_row_padding">
+            <button type="submit" onclick="ftops()" class="btn_options"><u>FUZZY TOPSIS</u></button>
+          </td>
+        </tr> -->
+      </table>
+      <form action="/logout">
+        <button type="submit" class="btn_options_down"><u>Logout</u></button>
+      </form>
+    </div>
+
+    <!-- ---------------------------------------- script ---------------------------------------- -->
+    <script>
+      var i_constraint = 2;
+      var i_objective = 2;
+      var i_tops = 2;
+      var gc = 1;
+      var el3 = 1;
+      var tps = 1;
+      var ftps = 1;
+      document.getElementById("global_criterion").style.display = "none";
+      document.getElementById("electre3").style.display = "none";
+      document.getElementById("topsis").style.display = "none";
+      document.getElementById("fuzzy_topsis").style.display = "none";
+      
+      // ----------------------------------- add to constraint ------------------------------------
+      function add_to_constraint() {
+        var table = document.getElementById("table_Constraint");
+        var row = table.insertRow(i_constraint);
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+
+        var input_constraint  = document.createElement("INPUT");
+        var input_coefficient = document.createElement("INPUT");
+        var button_delete_constraint = document.createElement("BUTTON");
+        
+        input_constraint.className = "input_constraint";
+        input_coefficient.className = "input_coefficient";
+        button_delete_constraint.className = "button_delete_constraint";
+
+        cell1.appendChild(input_constraint);
+        cell2.appendChild(input_coefficient);
+        cell3.appendChild(button_delete_constraint);
+        document.getElementsByClassName("button_delete_constraint")[i_constraint-2].setAttribute("onclick", "deleteRow_constraint(this)");
+        button_delete_constraint.innerHTML = "Delete";
+
+        i_constraint += 1;
+      }
+
+      // ------------------------------------ add to alt ------------------------------------
+      function add_to_alt() {
+        var table = document.getElementById("table_tops");
+        var row = table.insertRow(i_tops);
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+        var cell4 = row.insertCell(3);
+
+        var tops_weight  = document.createElement("INPUT");
+        var tops_criterion = document.createElement("INPUT");
+        var tops_alt = document.createElement("INPUT");
+        var tops_btn_del = document.createElement("BUTTON");
+
+        tops_weight.className = "tops_weight";
+        tops_weight.placeholder = "weight";
+
+        tops_criterion.className = "tops_criterion";
+        tops_criterion.placeholder = "min/max";
+
+        tops_alt.className = "tops_alt";
+        tops_alt.placeholder = "alt array";
+
+        tops_btn_del.innerHTML = "Delete";
+        tops_btn_del.className = "tops_btn_del";
+
+        cell1.appendChild(tops_weight);
+        cell2.appendChild(tops_criterion);
+        cell3.appendChild(tops_alt);
+        cell4.appendChild(tops_btn_del);
+
+        document.getElementsByClassName("tops_btn_del")[i_tops-2].setAttribute("disabled", "disabled");
+        document.getElementsByClassName("tops_weight")[i_tops-2].setAttribute("name", "tw"+(i_tops-1));
+        document.getElementsByClassName("tops_weight")[i_tops-2].setAttribute("type", "text");
+        document.getElementsByClassName("tops_criterion")[i_tops-2].setAttribute("name", "tc"+(i_tops-1));
+        document.getElementsByClassName("tops_criterion")[i_tops-2].setAttribute("type", "text");
+        document.getElementsByClassName("tops_alt")[i_tops-2].setAttribute("name", "ta"+(i_tops-1));
+        document.getElementsByClassName("tops_alt")[i_tops-2].setAttribute("type", "text");
+
+
+        document.getElementById("i_tops").setAttribute("value", (i_tops-1));
+        // document.getElementById("i_tops").placeholder = i_tops - 1;
+        i_tops += 1;
+      }
+      
+      // ------------------------------------ add to objective ------------------------------------
+      function add_to_objective() {
+        var table = document.getElementById("table_Objective");
+        var row = table.insertRow(i_objective);
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+
+        var input_objective = document.createElement("INPUT");
+        var input_coefficient = document.createElement("INPUT");
+        var button_delete_objective = document.createElement("BUTTON");
+
+        input_objective.className = "input_objective";
+        input_coefficient.className = "input_coefficient";
+        button_delete_objective.className = "button_delete_objective";
+
+        cell1.appendChild(input_objective);
+        cell2.appendChild(input_coefficient);
+        cell3.appendChild(button_delete_objective);
+        document.getElementsByClassName("button_delete_objective")[i_objective-2].setAttribute("onclick", "deleteRow_objective(this)");
+        button_delete_objective.innerHTML = "Delete";
+
+        i_objective += 1;
+      }
+
+      function deleteRow_constraint(r) {
+        var j = r.parentNode.parentNode.rowIndex;
+        document.getElementById("table_Constraint").deleteRow(j);
+        i_constraint -= 1;
+      }
+
+      function deleteRow_objective(s) {
+        var m = s.parentNode.parentNode.rowIndex;
+        document.getElementById("table_Objective").deleteRow(m);
+        i_objective -= 1;
+      }
+
+      function print_screen() {
+        print();
+      }
+      
+      // ------------------------------------ show/hide global criterion ------------------------------------
+      function GC() {
+        if (gc == 0) {
+          document.getElementById("global_criterion").style.display = "none";
+          gc = 1;
+        }
+        else if (gc == 1) {
+          document.getElementById("global_criterion").style.display = "block";
+          document.getElementById("electre3").style.display = "none";
+          document.getElementById("topsis").style.display = "none";
+          document.getElementById("fuzzy_topsis").style.display = "none";
+          gc = 0;
+          el3 = 1;
+          tps = 1;
+          ftps = 1;
+        }
+      }
+      // ------------------------------------ show/hide electre3 ------------------------------------
+      function electre3() {
+        if (el3 == 0) {
+          document.getElementById("electre3").style.display = "none";
+          el3 = 1;
+        }
+        else if (el3 == 1) {
+          document.getElementById("electre3").style.display = "block";
+          document.getElementById("global_criterion").style.display = "none";
+          document.getElementById("topsis").style.display = "none";
+          document.getElementById("fuzzy_topsis").style.display = "none";
+          el3 = 0;
+          gc = 1;
+          tps = 1;
+          ftps = 1;
+        }
+      }
+      // ------------------------------------ show/hide topsis ------------------------------------
+      function tops() {
+        if (tps == 0) {
+          document.getElementById("topsis").style.display = "none";
+          tps = 1;
+        }
+        else if (tps == 1) {
+          document.getElementById("topsis").style.display = "block";
+          document.getElementById("global_criterion").style.display = "none";
+          document.getElementById("electre3").style.display = "none";
+          document.getElementById("fuzzy_topsis").style.display = "none";
+          el3 = 1;
+          gc = 1;
+          tps = 0;
+          ftps = 1;
+        }
+      }
+      // ------------------------------------ show/hide fuzzy topsis ------------------------------------
+      function ftops() {
+        if (ftps == 0) {
+          document.getElementById("fuzzy_topsis").style.display = "none";
+          ftps = 1;
+        }
+        else if (ftps == 1) {
+          document.getElementById("fuzzy_topsis").style.display = "block";
+          document.getElementById("global_criterion").style.display = "none";
+          document.getElementById("topsis").style.display = "none";
+          document.getElementById("electre3").style.display = "none";
+          el3 = 1;
+          gc = 1;
+          tps = 1;
+          ftps = 0;
+        }
+      }
+      // ------------------------------------ reset parameters ------------------------------------
+      function reset() {
+        i_objective = 2;
+        i_constraint = 2;
+      }
+    </script>
+  </body>
+</html>
